@@ -1,0 +1,68 @@
+{% set name = "xrdcl-authz-plugin" %}
+{% set version = "0.0.1" %}
+
+package:
+  name: {{ name|lower }}
+  version: {{ version }}
+
+source:
+  url: https://github.com/bbockelman/xrdcl-authz-plugin/archive/v{{ version }}.tar.gz
+  sha256: xxxx
+
+build:
+  number: 0
+  skip: true  # [win]
+  run_exports:
+    # https://abi-laboratory.pro/tracker/timeline/xrootd/
+    - {{ pin_subpackage('xrdcl-authz-plugin', max_pin='x') }}
+
+requirements:
+  build:
+    - {{ compiler('c') }}
+    - {{ compiler('cxx') }}
+    - cmake
+    - make
+  host:
+    - openssl
+    - python
+    - readline
+    - libxml2
+    - libuuid  # [not osx]
+    - libcurl
+    - krb5
+    - zlib
+    - ncurses
+    - xrootd
+  run:
+    - openssl
+    - python
+    - readline
+    - libxml2
+    - krb5
+    - zlib
+    - ncurses
+    - xrootd
+
+test:
+  imports:
+    - XRootD.client
+    - pyxrootd
+  commands:
+    -
+
+about:
+  home: https://github.com/bbockelman/xrdcl-authz-plugin
+  license: LGPL-3.0-or-later
+  license_file: LICENSE
+  summary: Xrootd client plugin that enabled the WLCG bearer token discovery protocol
+
+  description: |
+    The XROOTD project aims at giving high performance, scalable fault tolerant
+    access to data repositories of many kinds.
+    This repository offered a Xrootd client plugin that enabled the WLCG bearer token discovery protocol to find the right token in environment.
+    This allows a macaroon token to be injected into the Docker container together with a forked version of "libXrdSecunix.so", that allows XCache to accept anonymous logins even when GSI is enabled.
+
+extra:
+  recipe-maintainers:
+    - oshadura
+    - bbockelman
